@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Autorización — Sin Filtro</title>
+<style>
+  body{ margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+        background:#1B1B1D; color:#fff; font-family:system-ui,-apple-system,Segoe UI,sans-serif; padding:32px; text-align:center }
+  code{ background:#000; padding:.2em .5em; border-radius:4px; word-break:break-all; display:inline-block; margin-top:.6em }
+  .ok{ color:#4ade80 } .err{ color:#E62A26 }
+</style>
+</head>
+<body>
+  <main>
+    <h1 id="titulo">Procesando…</h1>
+    <p id="detalle"></p>
+  </main>
+<script>
+  // Landing del callback de OAuth. NO intercambia el código por un token: eso pasa del lado del
+  // script que corre en la máquina, con el client secret, que nunca puede vivir en una página
+  // pública. Acá solo se muestra el `code` para copiarlo y pegarlo en la terminal.
+  var p = new URLSearchParams(location.search);
+  var code = p.get('code'), err = p.get('error');
+  var t = document.getElementById('titulo'), d = document.getElementById('detalle');
+  if (err) {
+    t.textContent = 'No se autorizó'; t.className = 'err';
+    d.textContent = p.get('error_description') || err;
+  } else if (code) {
+    t.textContent = 'Listo'; t.className = 'ok';
+    d.innerHTML = 'Copiá este código y pegalo en la terminal:<br><code>' + code.replace(/[<>&]/g,'') + '</code>';
+  } else {
+    t.textContent = 'Nada que hacer acá';
+    d.textContent = 'Esta página es el callback de autorización. Se llega desde el flujo de login.';
+  }
+</script>
+</body>
+</html>
